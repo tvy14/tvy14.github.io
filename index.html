@@ -3,178 +3,848 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title style="font-size: 4px;">Timothius Victorio Yasin (賴德強)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Timothius Victorio Yasin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --color-bg: #ffffff;
+            --color-surface: #f7f7f8;
+            --color-hero: #0a0a0c;
+            --color-text: #1a1a1a;
+            --color-text-muted: #6b6b76;
+            --color-text-hero: #e8e8ed;
+            --color-accent: #006b6b;
+            --color-accent-hover: #005050;
+            --color-border: #e5e5ea;
+            --color-border-subtle: #efeff2;
+            --color-card: #fafafb;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 32px;
+            --spacing-xl: 64px;
+            --spacing-2xl: 96px;
+            --spacing-3xl: 128px;
+            --font-weight-light: 300;
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+            --max-width: 1024px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #afd6c4;
-            color: #1f2937;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            font-size: 15px;
+            font-weight: var(--font-weight-regular);
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--color-border-subtle);
+            height: 52px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-weight: var(--font-weight-semibold);
+            font-size: 16px;
+            color: var(--color-text);
+            text-decoration: none;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            font-weight: var(--font-weight-medium);
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .nav-cta {
+            background: var(--color-hero);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: var(--font-weight-semibold);
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: #2a2a30;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: var(--color-hero);
+            color: var(--color-text-hero);
+            padding: 160px 0 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,107,107,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 80% 20%, rgba(0,107,107,0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 12px;
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: rgba(232,232,237,0.5);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: var(--font-weight-light);
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+            margin-bottom: var(--spacing-lg);
+            color: #ffffff;
+        }
+
+        .hero h1 span {
+            color: rgba(255,255,255,0.62);
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            color: rgba(232,232,237,0.62);
+            max-width: 560px;
+            margin: 0 auto var(--spacing-lg);
+            line-height: 1.7;
+            font-weight: var(--font-weight-regular);
+        }
+
+        .hero-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-links a {
+            color: rgba(232,232,237,0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: var(--font-weight-medium);
+            transition: color 0.2s;
+            padding: 6px 0;
+            border-bottom: 1px solid transparent;
+        }
+
+        .hero-links a:hover {
+            color: #ffffff;
+            border-bottom-color: var(--color-accent);
+        }
+
+        /* ── Tag Strip ── */
+        .tag-strip {
+            border-bottom: 1px solid var(--color-border-subtle);
+            padding: var(--spacing-md) 0;
+            overflow-x: auto;
+        }
+
+        .tag-strip-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-muted);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tag:hover,
+        .tag.active {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: rgba(0,107,107,0.04);
+        }
+
+        /* ── Sections ── */
+        .section {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+        }
+
+        .section-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--color-accent);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .section h2 {
+            font-size: clamp(26px, 3.5vw, 38px);
+            font-weight: var(--font-weight-light);
+            letter-spacing: -0.015em;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-text);
+            line-height: 1.2;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: var(--font-weight-light);
+            letter-spacing: -0.01em;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text);
+        }
+
+        .section-desc {
+            color: var(--color-text-muted);
+            font-size: 15px;
+            margin-bottom: var(--spacing-xl);
+            max-width: 560px;
+            line-height: 1.7;
+        }
+
+        /* ── Cards ── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--color-border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-date {
+            font-size: 11px;
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-accent);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+            margin-bottom: var(--spacing-xs);
+            line-height: 1.4;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .card-link {
+            display: inline-block;
+            margin-top: var(--spacing-sm);
+            font-size: 13px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .card-link:hover {
+            color: var(--color-accent-hover);
+            text-decoration: underline;
+        }
+
+        /* ── List items (publications, education) ── */
+        .item-list {
+            list-style: none;
+        }
+
+        .item-list li {
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--color-border-subtle);
+        }
+
+        .item-list li:first-child {
+            padding-top: 0;
+        }
+
+        .item-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .item-label {
+            font-size: 11px;
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-accent);
+            margin-bottom: 4px;
+        }
+
+        .item-title {
+            font-size: 15px;
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+
+        .item-detail {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .item-link {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-accent);
+            text-decoration: none;
+            margin-top: 4px;
+        }
+
+        .item-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Video Grid ── */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .video-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .video-card:hover {
+            border-color: var(--color-border);
+        }
+
+        .video-card iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+            display: block;
+        }
+
+        /* ── CTA Banner ── */
+        .cta-banner {
+            background: var(--color-hero);
+            color: #ffffff;
+            text-align: center;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,107,107,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-banner-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-banner h2 {
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: var(--font-weight-light);
+            letter-spacing: -0.02em;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.2;
+        }
+
+        .cta-banner p {
+            font-size: 16px;
+            color: rgba(232,232,237,0.62);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.7;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: var(--font-weight-semibold);
+            text-decoration: none;
+            transition: all 0.2s;
+            letter-spacing: -0.01em;
+        }
+
+        .btn-light {
+            background: #ffffff;
+            color: var(--color-hero);
+        }
+
+        .btn-light:hover {
+            background: #e8e8ed;
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #ffffff;
+        }
+
+        .btn-outline:hover {
+            border-color: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            background: var(--color-card);
+            border-top: 1px solid var(--color-border-subtle);
+            padding: var(--spacing-lg) var(--spacing-lg);
+            text-align: center;
+        }
+
+        .footer-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: var(--spacing-sm);
+        }
+
+        .footer-links a {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        /* ── Visitor Counter ── */
+        .visitor-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border-subtle);
+            max-width: 180px;
+            text-align: center;
+        }
+
+        .visitor-counter-label {
+            margin: 0 0 6px 0;
+            font-size: 9px;
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .visitor-counter img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .hero {
+                padding: 120px 0 80px;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .section {
+                padding: var(--spacing-xl) var(--spacing-md);
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- Main Content Container -->
-    <div class="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
-
-        <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-2">Timothius Victorio Yasin</h1>
-
-            <div class="flex justify-center space-x-4 mb-8">
-                <a href="mailto:timovictorio@gmail.com" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 font-medium">Email</a>
-                <span class="text-gray-400">|</span>
-                <a href="https://www.linkedin.com/in/timovy13" target="_blank" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 font-medium">LinkedIn</a>
-                <span class="text-gray-400">|</span>
-                <a href="https://github.com/tvy14" target="_blank" class="text-gray-600 hover:text-indigo-600 transition-colors duration-200 font-medium">GitHub</a>
-            </div>
-            <p class="text-sm italic text-gray-600 mb-4">hi, welcome to my personal page, where you could find the diverse of me</p>
-        </header>
-
-        <!-- Recent News Section -->
-        <section class="bg-white rounded-3xl shadow-xl p-8 sm:p-10 mb-16">
-            <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-center">Recent News<span class="text-xs text-gray-500 align-super font-normal ml-2">Updated: June 2026</span></h2>
-            <ul class="space-y-4 list-disc list-inside text-gray-700 leading-relaxed">
-                <li><strong class=”font-semibold text-gray-800”>June. 2026:</strong> Paper <strong>"ANGELS: Autonomous Networked GNodeB Edge Localization for pedestrian Safety", is accepted at IEEE PIMRC 2026 (Singapore).</strong></li>
-                <li><strong class=”font-semibold text-gray-800”>Oct. 2025:</strong> Project <strong>"Pedestrian Safety through B5G Advanced Technology - Angel-Eye", Won 3rd Place in MobileHeroes Global 2025 (Taipei, Taiwan).</strong> -- <a href="https://www.techbang.com/posts/126131-2025-telecom-awards-b5g-ai-esg" target="_blank" class="text-indigo-600 visited:text-indigo-600 hover:underline font-semibold"> News </a></li>
-                <li><strong class="font-semibold text-gray-800">Sep. 2025:</strong> Paper <strong>"Differential Privacy Federated Edge Learning-assisted for Securing RAN Intelligent Controller in O-RAN 6G Communications"</strong> is accepted and presented at IEEE VTS APWCS 2025 (Tokyo, Japan).</li>
-                <li><strong class="font-semibold text-gray-800">Nov. 2024:</strong> Developed "SmartIncomePredict", Won 1st Place in <strong>NICS_PETs Track at Innoserve 2024</strong>.</li>
-                <li><strong class="font-semibold text-gray-800">Mar. 2024:</strong> Developed "3D-Channel GPT", GenAI-based prompting for Radio Map generation, Won 2nd Place in <strong>NYCU Phison GenAI AIDaptiv+ Competition</strong>. -- <a href="https://www.digitimes.com.tw/tech/dt/n/shwnws.asp?id=0000690545_QLU46OKR535NB949UILOC" target="_blank" class="text-indigo-600 visited:text-indigo-600 hover:underline font-semibold"> News </a></li>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">TVY</a>
+            <ul class="nav-links">
+                <li><a href="#research">Research</a></li>
+                <li><a href="#publications">Publications</a></li>
+                <li><a href="#awards">Awards</a></li>
+                <li><a href="#projects">Projects</a></li>
             </ul>
-        </section>
+            <a href="https://www.linkedin.com/in/timovy13" target="_blank" class="nav-cta">Connect</a>
+        </div>
+    </nav>
 
-        <!-- Section 2: Education -->
-        <section class="bg-white rounded-3xl shadow-xl p-8 sm:p-10 mb-16">
-            <h3 class="text-3xl font-bold mb-4 text-center">Education</h3>
-            <ul class="space-y-4 list-disc list-inside text-gray-700 leading-relaxed">
-                <li><strong>Ph.D.(Cand.), National Yang Ming Chiao Tung University</strong> in Electrical Engineering.  -- <a href="https://airic.web.nycu.edu.tw/" target="_blank" class="text-indigo-600 hover:underline font-semibold">Project Page</a> | <a href="https://aiwireless-535100.github.io/" target="_blank" class="text-indigo-600 hover:underline font-semibold">TA for AI-Wireless Course</a>
-                <li><strong>M.Sc., National Yang Ming Chiao Tung University</strong> in Electrical Engineering.</li>
-                <li><strong>B.Eng., Petra Christian University</strong> in Electrical Engineering.</li>
-            </ul>
-        </section>
-
-        <!-- Section 3: Awards -->
-        <section class="bg-white rounded-3xl shadow-xl p-8 sm:p-10 mb-16">
-            <h3 class="text-3xl font-bold mb-4 text-center">Awards & Honors</h3>
-            <ul class="space-y-4 list-disc list-inside text-gray-700 leading-relaxed">
-                <li><strong>3rd Place</strong> in the <strong>MobileHeroes Global</strong> MobileHeroes 2025 通訊大賽 (Oct, 2025) -- <a href="https://www.techbang.com/posts/126131-2025-telecom-awards-b5g-ai-esg" target="_blank" class="text-indigo-600 visited:text-indigo-600 hover:underline font-semibold"> News </a></li>
-                <li><strong>1st Place</strong> in the <strong>NICS_PETs Track (組別:隱私強化技術應用組)</strong> 29th International ICT Innovative Services Awards 2024 - Innoserve 2024 (Nov, 2024)</li>
-                <li><strong>2nd Place</strong> - <strong>NYCU Phison GenAI AIDaptiv+ Competition</strong> (Mar, 2024) -- <a href="https://www.digitimes.com.tw/tech/dt/n/shwnws.asp?id=0000690545_QLU46OKR535NB949UILOC" target="_blank" class="text-indigo-600 visited:text-indigo-600 hover:underline font-semibold"> News </a></li>
-                <li><strong>Finalist</strong> in the <strong>Taipei Blockchain Week 2023 - Sui Track</strong> (Dec, 2023)</li>
-                <li><strong>4th Place</strong> in the <strong>NTHU IMBA x Entrelistic Taiwan Business Simulation Competition 2023</strong>(Sep, 2023) -- <a href="https://imba.nthu.edu.tw/latest-news/191-imba-x-entrelistic-taiwan-business-simulation-competition-2024.html" target="_blank" class="text-indigo-600 visited:text-indigo-600 hover:underline font-semibold"> Competition Page </a></li>
-                <li><strong>2nd Place</strong> in the <strong>NYCU 2022 Deep Learning Final Project Competition</strong> -- <a href="https://www.kaggle.com/competitions/nycu-2022-deep-learning-final-project/leaderboard" target="_blank" class="text-indigo-600 visited:text-indigo-600 hover:underline font-semibold"> Competition Page </a></li>
-            </ul>
-        </section>
-
-        <!-- Section 4: Published Papers -->
-        <section class="bg-white rounded-3xl shadow-xl p-8 sm:p-10 mb-16">
-            <h3 class="text-3xl font-bold mb-4 text-center">Publications</h3>
-            <ul class="space-y-4 list-disc list-inside text-gray-700 leading-relaxed"> 
-                <li>
-                    <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, T. -K. Wang, Y.-H., Yang, W.-C., Chuang, Z. You,  and L. -C. Wang, "ANGELS: Autonomous Networked GNodeB Edge Localization for pedestrian Safety", <em>accepted at IEEE PIMRC 2026</em>
-                    <br><a href="https://www.youtube.com/playlist?list=PLLZmsCdVRniigR5ZWghRq_2IhwakpgeAa" target="_blank" class="text-blue-600 hover:underline font-medium">— Demo Page</a>
-                </li>
-                <li>
-                    <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, C.-M. Yu, and L.-C. Wang, "Differential Privacy Federated Edge Learning-assisted for Securing RAN Intelligent Controller in O-RAN 6G Communications," in <em>Proc. IEEE VTS Asia Pacific Wireless Communications Symposium (APWCS)</em>, Tokyo, Japan, 2025, pp. 1-5, doi: 10.1109/APWCS67981.2025.1115186.
-                    <br><a href="https://tvy14.github.io/Securing-RIC-ORAN-DPFL/" target="_blank" class="text-blue-600 hover:underline font-medium">— Simulation Page</a>
-                </li>
-                <li>
-                    <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, F. Pasila, R. Lim, "A Study of Mobile Robot Control Using EEG Emotiv Epoch Sensor," in <em>MATEC Web Conf.</em>, vol. 164, ICESTI 2017.
-                </li>
-                <li>
-                    A. Censi, L. Paull, <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, Y. Bengio, H.-C. Wang, E. Frazzoli, et al., "The AI Driving Olympics at NIPS 2018," in <em>RSS Workshop on New Benchmarks, Metrics, and Competitions for Robotic Learning</em>, Pittsburgh, 2018.
-                </li>
-                <!-- Local Conference Sub-section -->
-                <li class="mt-6 mb-2 list-none">
-                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Local Conference</h4>
-                    <ul class="space-y-2 list-disc list-inside text-gray-700">
-                </li>
-                <li>
-                    <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, C.-S. Huang, and L.-C. Wang, "Coordinating Multiple UAVs based on Nonlinear Model Predictive Control," in <em>Proc. 第二十六屆行動計算研討會暨科技部專題計畫資訊學門成果發表會 The 26th Mobile Computing Workshop (MC2022)</em>, Taiwan, 2022.
-                </li>
-                <li>
-                    <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, L.-C. Wang, "Distributed Clustered Federated Learning with Blockchain Assisted for Secure Model Aggregation," in <em>Proc. 第二十七屆行動計算研討會 The 27th Mobile Computing Workshop (MC2023) & 第十八屆無線、隨意及感測網路研討會 The 18th Workshop on Wireless, Ad-Hoc and Sensor Networks (WASN2023)</em>, Taiwan, 2023.
-                </li>
-                <li>
-                    <strong><span style="font-variant:small-caps;">T. V. Yasin</span></strong>, Y.-J. Chen, and L.-C. Wang, "Clustered Secure Model Aggregation with PBFT Consensus-Based Blockchain Federated Learning," in <em>Proc. 2024台灣電信年 (Taiwan Telecommunications Annual Symposium 2024)</em>, Taiwan, 2024.
-                </li>
-            </ul>
-        </section>
-
-        <!-- Section 5: Others (YouTube Videos) -->
-        <section class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl mb-12">
-            <h2 class="text-2xl font-bold mb-4">Others: Fun Stuffs I did</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/VmmPcpwwZSQ?si=ipLxz7h44ClDTTS3" title="YouTube video 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/_Mo_otptT4A" title="YouTube video 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/n0UUf1dSxzg" title="YouTube video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/2wpLzZCguBY" title="YouTube video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Section 6: Motivation and Call to Action -->
-        <section class="bg-indigo-600 text-white text-center rounded-3xl shadow-2xl p-8 sm:p-12">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">What Innovations Have You Made Today?</h2>
-            <p class="text-base sm:text-lg text-indigo-100 max-w-3xl mx-auto mb-8 leading-relaxed">
-                The future is built on collaboration. My journey is documented here, but the next chapter is unwritten. I'm always seeking new challenges and connections with those who want to push the boundaries of technology. Let's create something meaningful together.
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-inner">
+            <p class="hero-eyebrow">Ph.D. Candidate · AI-RAN &amp; Federated Learning</p>
+            <h1>Timothius<br>Victorio Yasin</h1>
+            <p class="hero-desc">
+                Building secure, intelligent wireless systems at the intersection of O-RAN,
+                federated learning, and differential privacy. National Yang Ming Chiao Tung University.
             </p>
-            <a href="https://www.linkedin.com/in/timovy13" target="_blank" class="inline-block px-8 py-4 text-lg font-bold text-indigo-600 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200">
-                Connect with me on LinkedIn
-            </a>
-        </section>
+            <div class="hero-links">
+                <a href="mailto:timovictorio@gmail.com">Email</a>
+                <a href="https://www.linkedin.com/in/timovy13" target="_blank">LinkedIn</a>
+                <a href="https://github.com/tvy14" target="_blank">GitHub</a>
+                <a href="#publications">Publications</a>
+            </div>
+        </div>
+    </section>
 
-        <!-- Footer -->
-        <footer class="text-center text-gray-500 text-sm mt-12">
-            <p>
-                <span class="inline-block align-middle mr-1" title="Copyright">
-                    &copy;
-                </span>
-                2025 Timothius Victorio Yasin. Built for fun. <span class="ml-2 font-semibold">Mozard Corp. — "Empowering BUIDLer, Inspiring Innovationsss"</span>
-            </p>
-        </footer>
-
+    <!-- Tag Strip -->
+    <div class="tag-strip">
+        <div class="tag-strip-inner">
+            <span class="tag active">All</span>
+            <span class="tag">O-RAN</span>
+            <span class="tag">Federated Learning</span>
+            <span class="tag">Differential Privacy</span>
+            <span class="tag">6G</span>
+            <span class="tag">NTN</span>
+        </div>
     </div>
 
-    <!-- Visitor Counter by Country (bottom-right, fixed) -->
-    <!-- To activate: go to https://flagcounter.com → "Add to your site" → copy your embed URL → replace the two YOUR_FLAG_COUNTER_ID placeholders below -->
-    <div id="visitor-counter" style="
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 999;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 16px;
-        padding: 10px 14px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
-        border: 1px solid rgba(0,0,0,0.07);
-        max-width: 190px;
-        text-align: center;
-    ">
-        <p style="
-            margin: 0 0 7px 0;
-            font-size: 10px;
-            font-weight: 700;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-family: 'Inter', sans-serif;
-        ">Visitors by Country</p>
+    <!-- Recent News -->
+    <section class="section" id="research">
+        <div class="section-inner">
+            <p class="section-label">Latest</p>
+            <h2>Recent News</h2>
+            <p class="section-desc">Updates on publications, awards, and research milestones.</p>
+            <div class="card-grid">
+                <div class="card">
+                    <p class="card-date">June 2026</p>
+                    <p class="card-title">Paper Accepted at IEEE PIMRC 2026</p>
+                    <p class="card-desc">"ANGELS: Autonomous Networked GNodeB Edge Localization for pedestrian Safety" accepted at IEEE PIMRC 2026, Singapore.</p>
+                </div>
+                <div class="card">
+                    <p class="card-date">October 2025</p>
+                    <p class="card-title">3rd Place — MobileHeroes Global 2025</p>
+                    <p class="card-desc">Project "Angel-Eye" for pedestrian safety through B5G advanced technology. Taipei, Taiwan.</p>
+                    <a href="https://www.techbang.com/posts/126131-2025-telecom-awards-b5g-ai-esg" target="_blank" class="card-link">Read news →</a>
+                </div>
+                <div class="card">
+                    <p class="card-date">September 2025</p>
+                    <p class="card-title">Presented at IEEE VTS APWCS 2025</p>
+                    <p class="card-desc">"Differential Privacy Federated Edge Learning-assisted for Securing RAN Intelligent Controller in O-RAN 6G." Tokyo, Japan.</p>
+                </div>
+                <div class="card">
+                    <p class="card-date">November 2024</p>
+                    <p class="card-title">1st Place — NICS_PETs Track, Innoserve 2024</p>
+                    <p class="card-desc">"SmartIncomePredict" — privacy-enhancing technologies for intelligent income prediction.</p>
+                </div>
+                <div class="card">
+                    <p class="card-date">March 2024</p>
+                    <p class="card-title">2nd Place — NYCU Phison GenAI AIDaptiv+</p>
+                    <p class="card-desc">"3D-Channel GPT" — GenAI-based prompting for radio map generation.</p>
+                    <a href="https://www.digitimes.com.tw/tech/dt/n/shwnws.asp?id=0000690545_QLU46OKR535NB949UILOC" target="_blank" class="card-link">Read news →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section class="section" style="background: var(--color-surface);">
+        <div class="section-inner">
+            <p class="section-label">Background</p>
+            <h2>Education</h2>
+            <p class="section-desc">Academic training in electrical engineering with a focus on wireless communications and AI.</p>
+            <div class="card-grid">
+                <div class="card">
+                    <p class="card-date">2022 – Present</p>
+                    <p class="card-title">Ph.D. Candidate, Electrical Engineering</p>
+                    <p class="card-desc">National Yang Ming Chiao Tung University (NYCU), Taiwan.<br>AI-RAN Intelligent Communications Lab.</p>
+                    <a href="https://airic.web.nycu.edu.tw/" target="_blank" class="card-link">Lab page →</a>
+                    &nbsp;
+                    <a href="https://aiwireless-535100.github.io/" target="_blank" class="card-link">TA: AI-Wireless →</a>
+                </div>
+                <div class="card">
+                    <p class="card-date">2020 – 2022</p>
+                    <p class="card-title">M.Sc., Electrical Engineering</p>
+                    <p class="card-desc">National Yang Ming Chiao Tung University (NYCU), Taiwan.</p>
+                </div>
+                <div class="card">
+                    <p class="card-date">2016 – 2020</p>
+                    <p class="card-title">B.Eng., Electrical Engineering</p>
+                    <p class="card-desc">Petra Christian University, Indonesia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications -->
+    <section class="section" id="publications">
+        <div class="section-inner">
+            <p class="section-label">Research Output</p>
+            <h2>Publications</h2>
+            <p class="section-desc">Peer-reviewed papers in wireless communications, federated learning, and AI-driven networking.</p>
+
+            <h3 style="margin-top: var(--spacing-lg);">International Conferences</h3>
+            <ul class="item-list">
+                <li>
+                    <p class="item-label">IEEE PIMRC 2026 · Singapore</p>
+                    <p class="item-title">ANGELS: Autonomous Networked GNodeB Edge Localization for pedestrian Safety</p>
+                    <p class="item-detail"><strong>T. V. Yasin</strong>, T.-K. Wang, Y.-H. Yang, W.-C. Chuang, Z. You, L.-C. Wang</p>
+                    <a href="https://www.youtube.com/playlist?list=PLLZmsCdVRniigR5ZWghRq_2IhwakpgeAa" target="_blank" class="item-link">Demo page →</a>
+                </li>
+                <li>
+                    <p class="item-label">IEEE VTS APWCS 2025 · Tokyo</p>
+                    <p class="item-title">Differential Privacy Federated Edge Learning-assisted for Securing RAN Intelligent Controller in O-RAN 6G Communications</p>
+                    <p class="item-detail"><strong>T. V. Yasin</strong>, C.-M. Yu, L.-C. Wang. doi: 10.1109/APWCS67981.2025.1115186</p>
+                    <a href="https://tvy14.github.io/Securing-RIC-ORAN-DPFL/" target="_blank" class="item-link">Simulation page →</a>
+                </li>
+                <li>
+                    <p class="item-label">MATEC Web Conf. · ICESTI 2017</p>
+                    <p class="item-title">A Study of Mobile Robot Control Using EEG Emotiv Epoch Sensor</p>
+                    <p class="item-detail"><strong>T. V. Yasin</strong>, F. Pasila, R. Lim</p>
+                </li>
+                <li>
+                    <p class="item-label">RSS Workshop · NeurIPS 2018</p>
+                    <p class="item-title">The AI Driving Olympics at NIPS 2018</p>
+                    <p class="item-detail">A. Censi, L. Paull, <strong>T. V. Yasin</strong>, Y. Bengio, H.-C. Wang, E. Frazzoli, et al.</p>
+                </li>
+            </ul>
+
+            <h3 style="margin-top: var(--spacing-xl);">Local Conferences (Taiwan)</h3>
+            <ul class="item-list">
+                <li>
+                    <p class="item-label">MC 2022</p>
+                    <p class="item-title">Coordinating Multiple UAVs based on Nonlinear Model Predictive Control</p>
+                    <p class="item-detail"><strong>T. V. Yasin</strong>, C.-S. Huang, L.-C. Wang</p>
+                </li>
+                <li>
+                    <p class="item-label">MC 2023 &amp; WASN 2023</p>
+                    <p class="item-title">Distributed Clustered Federated Learning with Blockchain Assisted for Secure Model Aggregation</p>
+                    <p class="item-detail"><strong>T. V. Yasin</strong>, L.-C. Wang</p>
+                </li>
+                <li>
+                    <p class="item-label">Taiwan Telecom Symposium 2024</p>
+                    <p class="item-title">Clustered Secure Model Aggregation with PBFT Consensus-Based Blockchain Federated Learning</p>
+                    <p class="item-detail"><strong>T. V. Yasin</strong>, Y.-J. Chen, L.-C. Wang</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Awards -->
+    <section class="section" id="awards" style="background: var(--color-surface);">
+        <div class="section-inner">
+            <p class="section-label">Recognition</p>
+            <h2>Awards &amp; Honors</h2>
+            <p class="section-desc">Competitive achievements across AI, telecommunications, and privacy-preserving technologies.</p>
+            <div class="card-grid">
+                <div class="card">
+                    <p class="card-date">October 2025</p>
+                    <p class="card-title">3rd Place — MobileHeroes Global 2025</p>
+                    <p class="card-desc">MobileHeroes 通訊大賽. Taipei, Taiwan.</p>
+                    <a href="https://www.techbang.com/posts/126131-2025-telecom-awards-b5g-ai-esg" target="_blank" class="card-link">News coverage →</a>
+                </div>
+                <div class="card">
+                    <p class="card-date">November 2024</p>
+                    <p class="card-title">1st Place — NICS_PETs Track</p>
+                    <p class="card-desc">29th International ICT Innovative Services Awards (Innoserve 2024). Privacy Enhancement Technology.</p>
+                </div>
+                <div class="card">
+                    <p class="card-date">March 2024</p>
+                    <p class="card-title">2nd Place — NYCU Phison GenAI AIDaptiv+</p>
+                    <p class="card-desc">GenAI competition for adaptive intelligent systems.</p>
+                    <a href="https://www.digitimes.com.tw/tech/dt/n/shwnws.asp?id=0000690545_QLU46OKR535NB949UILOC" target="_blank" class="card-link">News coverage →</a>
+                </div>
+                <div class="card">
+                    <p class="card-date">December 2023</p>
+                    <p class="card-title">Finalist — Taipei Blockchain Week</p>
+                    <p class="card-desc">Sui Track. Blockchain and decentralized systems.</p>
+                </div>
+                <div class="card">
+                    <p class="card-date">September 2023</p>
+                    <p class="card-title">4th Place — NTHU IMBA Business Simulation</p>
+                    <p class="card-desc">NTHU x Entrelistic Taiwan Business Simulation Competition.</p>
+                    <a href="https://imba.nthu.edu.tw/latest-news/191-imba-x-entrelistic-taiwan-business-simulation-competition-2024.html" target="_blank" class="card-link">Competition page →</a>
+                </div>
+                <div class="card">
+                    <p class="card-date">2022</p>
+                    <p class="card-title">2nd Place — NYCU Deep Learning Competition</p>
+                    <p class="card-desc">Final project competition in deep learning.</p>
+                    <a href="https://www.kaggle.com/competitions/nycu-2022-deep-learning-final-project/leaderboard" target="_blank" class="card-link">Leaderboard →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects / Videos -->
+    <section class="section" id="projects">
+        <div class="section-inner">
+            <p class="section-label">Demonstrations</p>
+            <h2>Projects &amp; Demos</h2>
+            <p class="section-desc">Selected work showcasing research prototypes and experimental systems.</p>
+            <div class="video-grid">
+                <div class="video-card">
+                    <iframe src="https://www.youtube.com/embed/VmmPcpwwZSQ" title="Project demo 1" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="video-card">
+                    <iframe src="https://www.youtube.com/embed/_Mo_otptT4A" title="Project demo 2" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="video-card">
+                    <iframe src="https://www.youtube.com/embed/n0UUf1dSxzg" title="Project demo 3" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <div class="video-card">
+                    <iframe src="https://www.youtube.com/embed/2wpLzZCguBY" title="Project demo 4" allowfullscreen loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner">
+        <div class="cta-banner-inner">
+            <h2>Let's Build the Future of Intelligent Wireless</h2>
+            <p>I'm always open to research collaborations, speaking invitations, and new challenges at the frontier of AI-RAN, federated learning, and privacy-preserving systems.</p>
+            <a href="https://www.linkedin.com/in/timovy13" target="_blank" class="btn btn-light">Connect on LinkedIn</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p class="footer-text">&copy; 2025 Timothius Victorio Yasin. Mozard Corp. — Empowering BUIDLer, Inspiring Innovations</p>
+            <div class="footer-links">
+                <a href="mailto:timovictorio@gmail.com">Email</a>
+                <a href="https://github.com/tvy14" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/timovy13" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Visitor Counter -->
+    <div class="visitor-counter">
+        <p class="visitor-counter-label">Visitors by Country</p>
         <a href="https://info.flagcounter.com/fRgp" target="_blank" rel="noopener">
-            <img src="https://s01.flagcounter.com/count2/fRgp/bg_17FFE8/txt_000000/border_CCCCCC/columns_2/maxflags_14/viewers_0/labels_0/pageviews_0/flags_0/percent_0/"
-                 alt="Flag Counter"
-                 style="max-width: 100%; border: 0; border-radius: 6px;">
+            <img src="https://s01.flagcounter.com/count2/fRgp/bg_17FFE8/txt_000000/border_CCCCCC/columns_2/maxflags_14/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter">
         </a>
     </div>
 
