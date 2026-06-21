@@ -779,10 +779,8 @@
                 </div>
             </div>
             <div style="text-align:center;margin-top:20px;">
-                <p class="hero-desc">
-                    Building secure, intelligent wireless systems at the intersection of O-RAN,
-                    federated learning, and differential privacy. National Yang Ming Chiao Tung University.
-                </p>
+                <p class="hero-desc" style="white-space:nowrap;">Building secure, intelligent wireless systems at the intersection of O-RAN, federated learning, and differential privacy.</p>
+                <p style="color:rgba(232,232,237,0.62);font-size:15px;line-height:1.7;font-weight:var(--font-weight-regular);margin-top:6px;">National Yang Ming Chiao Tung University.</p>
                 <div class="hero-links">
                     <a href="mailto:timovictorio@gmail.com">Email</a>
                     <a href="https://www.linkedin.com/in/timovy13" target="_blank">LinkedIn</a>
@@ -1041,8 +1039,8 @@
       const gap = 15;
       const width = (cols - 1) * gap;
       const startX = (W - width) / 2;
-      const binTop = startY + rows * 10 + 8;
-      const binH = H - binTop - 10;
+      const binTop = startY + rows * 10 + 10;
+      const binH = H - binTop - 12;
 
       const balls = [];
       const bins = new Array(cols).fill(0);
@@ -1072,7 +1070,7 @@
           x: W/2 + (Math.random()-0.5)*3,
           y: 4,
           vx: 0,
-          vy: 0.22 + Math.random()*0.18,
+          vy: 0.11 + Math.random()*0.09,
           stuck: 0
         });
       };
@@ -1087,23 +1085,23 @@
       const update = () => {
         if (balls.length < maxBalls) {
           spawnTimer++;
-          if (spawnTimer % 6 === 0) spawn();
+          if (spawnTimer % 8 === 0) spawn();
         }
 
-        curX += (mx.x - curX) * 0.1;
-        curY += (mx.y - curY) * 0.1;
+        curX += (mx.x - curX) * 0.05;
+        curY += (mx.y - curY) * 0.05;
 
         for (let i = balls.length - 1; i >= 0; i--) {
           const b = balls[i];
-          b.vy += 0.006;
+          b.vy += 0.003;
           b.y += b.vy;
           b.stuck *= 0.85;
 
           const dx = b.x - curX;
           const dy = b.y - curY;
           const d = Math.sqrt(dx*dx + dy*dy) || 1;
-          const influence = Math.max(0, 1 - d / 100);
-          const force = influence * 0.2;
+          const influence = Math.max(0, 1 - d / 120);
+          const force = influence * 0.1;
           b.vx += (dx / d) * force;
           b.vy += (dy / d) * force * 0.25;
           b.x += b.vx;
@@ -1152,87 +1150,114 @@
         const centerBin = mean;
         const threeSigma = 3 * sd;
 
-        // Bins
         const maxBin = Math.max(...bins, 1);
-        for (let i = 0; i < cols; i++) {
-          const h = maxBin > 0 ? (bins[i] / maxBin) * (binH - 8) : 0;
-          const x = startX + i * gap - gap/2 + 2;
-          // color fill
-          ctx.fillStyle = 'rgba(120,200,255,0.75)';
-          ctx.fillRect(x, H - h - 6 - binH + (6 + binH - h), gap - 4, h);
-          ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-          ctx.strokeRect(x, H - h - 6 - binH + (6 + binH - h), gap - 4, h);
 
-          // Six-sigma region highlight: bins within ±3σ of mean
+        for (let i = 0; i < cols; i++) {
+          const x = startX + i * gap - gap/2 + 2;
+          const w = gap - 4;
+
+          // Background highlight for 6σ region
           if (Math.abs(i - centerBin) <= threeSigma + 0.5) {
-            ctx.fillStyle = 'rgba(120,220,160,0.12)';
+            ctx.fillStyle = 'rgba(120,220,160,0.18)';
           } else {
-            ctx.fillStyle = 'rgba(255,120,140,0.12)';
+            ctx.fillStyle = 'rgba(255,120,140,0.18)';
           }
-          ctx.fillRect(x, binTop, gap - 4, binH);
+          ctx.fillRect(x, binTop, w, binH);
+
+          // Bar
+          const h = maxBin > 0 ? (bins[i] / maxBin) * (binH - 4) : 0;
+          if (h > 0) {
+            ctx.fillStyle = 'rgba(140,210,255,0.9)';
+            ctx.fillRect(x, H - 8 - h, w, h);
+            // Top glow highlight
+            ctx.fillStyle = 'rgba(255,255,255,0.35)';
+            ctx.fillRect(x, H - 8 - h, w, 2);
+          }
+
+          // Outline
+          ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+          ctx.lineWidth = 0.6;
+          ctx.strokeRect(x, binTop, w, binH);
         }
 
         // 6σ boundaries (±3σ lines)
         const ucl = startX + (centerBin + threeSigma) * gap;
         const lcl = startX + (centerBin - threeSigma) * gap;
-        ctx.strokeStyle = 'rgba(120,220,160,0.85)';
-        ctx.lineWidth = 1;
-        ctx.setLineDash([3, 3]);
-        ctx.beginPath(); ctx.moveTo(lcl, binTop); ctx.lineTo(lcl, H - 6); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(ucl, binTop); ctx.lineTo(ucl, H - 6); ctx.stroke();
+        ctx.strokeStyle = 'rgba(120,220,160,0.9)';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(lcl, binTop - 2); ctx.lineTo(lcl, H - 4); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ucl, binTop - 2); ctx.lineTo(ucl, H - 4); ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = 'rgba(120,220,160,0.95)';
-        ctx.font = '9px sans-serif';
+        ctx.font = 'bold 9px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('-3σ', lcl, binTop - 4);
-        ctx.fillText('+3σ', ucl, binTop - 4);
+        ctx.fillText('-3σ', lcl, binTop - 5);
+        ctx.fillText('+3σ', ucl, binTop - 5);
 
-        // Normal curve overlay
+        // Normal curve overlay with smooth filling
         if (n > 20) {
-          ctx.strokeStyle = 'rgba(255,220,120,0.9)';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
           const maxCurve = maxBin * 0.85;
+          ctx.fillStyle = 'rgba(255,220,120,0.15)';
+          ctx.beginPath();
+          ctx.moveTo(startX + 0 * gap, H - 6);
           for (let i = 0; i < cols; i++) {
             const z = (i - centerBin) / (sd || 1);
             const normal = (1/Math.sqrt(2*Math.PI)) * Math.exp(-0.5*z*z);
             const x = startX + i * gap;
-            const y = H - 6 + 8 - (normal / maxCurve) * (binH - 16);
+            const y = H - 6 + 4 - (normal / maxCurve) * (binH - 8);
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(startX + (cols-1) * gap, H - 6);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = 'rgba(255,220,120,0.95)';
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          for (let i = 0; i < cols; i++) {
+            const z = (i - centerBin) / (sd || 1);
+            const normal = (1/Math.sqrt(2*Math.PI)) * Math.exp(-0.5*z*z);
+            const x = startX + i * gap;
+            const y = H - 6 + 4 - (normal / maxCurve) * (binH - 8);
             if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
           }
           ctx.stroke();
         }
 
-        // Pegs (using fading rows toward top to emphasize "after many trials")
+        // Pegs (fading from top down)
         for (let r = 0; r < rows; r++) {
           const pegY = startY + r * 10;
           const rowWidth = r * gap;
           const pegXStart = (W - rowWidth) / 2;
+          const alpha = 0.3 + 0.4 * (r / rows);
+          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
           for (let c = 0; c <= r; c++) {
             const px = pegXStart + c * gap;
-            const alpha = 0.35 + 0.35 * (r / rows);
-            ctx.fillStyle = `rgba(255,255,255,${alpha})`;
             ctx.beginPath();
             ctx.arc(px, pegY, pegR, 0, Math.PI*2);
             ctx.fill();
           }
         }
 
-        // Balls
+        // Balls with slight glow
+        ctx.shadowColor = 'rgba(255,255,255,0.8)';
+        ctx.shadowBlur = 1.4;
         ctx.fillStyle = '#ffffff';
         for (const b of balls) {
           ctx.beginPath();
           ctx.arc(b.x, b.y, 1.15, 0, Math.PI*2);
           ctx.fill();
         }
+        ctx.shadowBlur = 0;
 
         // Stats
         const within = n ? (bins.reduce((acc, v, i) => Math.abs(i - centerBin) <= threeSigma + 0.5 ? acc + v : acc, 0) / n * 100) : 0;
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
-        ctx.font = '9px monospace';
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.font = 'bold 9px monospace';
         ctx.textAlign = 'left';
-        ctx.fillText(`μ=${mean.toFixed(2)} σ=${sd.toFixed(2)} n=${n}`, 3, 10);
-        ctx.fillText(`6σ=${within.toFixed(2)}%`, 3, 20);
+        ctx.fillText(`μ=${mean.toFixed(2)} σ=${sd.toFixed(2)}`, 4, 11);
+        ctx.fillText(`6σ coverage=${within.toFixed(2)}%`, 4, 22);
       };
 
       const loop = () => {
