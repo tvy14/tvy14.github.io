@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timothius Victorio Yasin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-bg: #ffffff;
@@ -13,8 +15,8 @@
             --color-text: #1a1a1a;
             --color-text-muted: #6b6b76;
             --color-text-hero: #e8e8ed;
-            --color-accent: #006b6b;
-            --color-accent-hover: #005050;
+            --color-accent: #0000f2;
+            --color-accent-hover: #0000cc;
             --color-border: #e5e5ea;
             --color-border-subtle: #efeff2;
             --color-card: #fafafb;
@@ -51,7 +53,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Cinzel', 'Times New Roman', Times, serif;
             background: var(--color-bg);
             color: var(--color-text);
             line-height: 1.6;
@@ -582,14 +584,74 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+    /* ── Hermes Agent-inspired overrides ── */
+    .hero-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(12px, 2vw, 24px);
+        flex-wrap: wrap;
+    }
+    .hero-avatar {
+        width: clamp(48px, 8vw, 96px);
+        height: clamp(48px, 8vw, 96px);
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--color-accent);
+    }
+    .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 40%, rgba(0,0,0,0.4) 100%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .hero-eyebrow,
+    .section-label,
+    .card-date,
+    .item-label,
+    .tag,
+    .footer-text,
+    .footer-links a {
+        font-family: 'Courier Prime', 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+    }
+    .hero h1,
+    .section h2,
+    .section h3,
+    .card-title,
+    .item-title,
+    .nav-logo {
+        font-family: 'Cinzel', 'Times New Roman', Times, serif;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 300;
+    }
+    .nav-cta {
+        font-family: 'Courier Prime', 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        border-radius: 0;
+        background: var(--color-hero);
+        color: #fff;
+    }
+    .btn {
+        font-family: 'Courier Prime', 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        border-radius: 0;
+        font-weight: 700;
+    }
+</style>
 </head>
 <body>
 
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-inner">
-            <a href="#" class="nav-logo">TVY</a>
+            <a href="#" class="nav-logo"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="TVY" style="height:28px;width:28px;border-radius:50%;vertical-align:middle;margin-right:8px;object-fit:cover;">TVY</a>
             <ul class="nav-links">
                 <li><a href="#research">Research</a></li>
                 <li><a href="#publications">Publications</a></li>
@@ -604,7 +666,7 @@
     <section class="hero">
         <div class="hero-inner">
             <p class="hero-eyebrow">Ph.D. Candidate · AI-RAN &amp; Federated Learning</p>
-            <h1>Timothius<br>Victorio Yasin</h1>
+            <h1 class="hero-title"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></h1>
             <p class="hero-desc">
                 Building secure, intelligent wireless systems at the intersection of O-RAN,
                 federated learning, and differential privacy. National Yang Ming Chiao Tung University.
