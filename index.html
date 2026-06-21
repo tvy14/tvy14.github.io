@@ -565,28 +565,6 @@
             border-radius: 4px;
         }
 
-        #galton-wrap {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 180px;
-            height: 130px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            overflow: hidden;
-            z-index: 20;
-        }
-
-        #galton {
-            display: block;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
         /* ── Responsive ── */
         @media (max-width: 640px) {
             .hero {
@@ -788,10 +766,16 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div id="galton-wrap"><canvas id="galton" width="180" height="130"></canvas></div>
         <div class="hero-inner">
-            <p class="hero-eyebrow">Ph.D. Candidate · AI-RAN &amp; Federated Learning</p>
-            <h1 class="hero-title"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></h1>
+            <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;">
+                <div class="hero-title" style="margin-bottom:0;"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <button id="galton-reset" title="Reset Galton board" style="width:22px;height:22px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.08);color:#fff;border-radius:50%;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;">↻</button>
+                    <div style="position:relative;width:220px;height:160px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;">
+                        <canvas id="galton" width="220" height="160" style="display:block;width:100%;height:100%;cursor:pointer;"></canvas>
+                    </div>
+                </div>
+            </div>
             <p class="hero-desc">
                 Building secure, intelligent wireless systems at the intersection of O-RAN,
                 federated learning, and differential privacy. National Yang Ming Chiao Tung University.
@@ -1039,51 +1023,94 @@
     const initGalton = () => {
       const cvs = document.getElementById('galton');
       if (!cvs) return;
+      const resetBtn = document.getElementById('galton-reset');
+
       const ctx = cvs.getContext('2d');
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const W = 180, H = 130;
+      const W = 220, H = 160;
       cvs.width = W * dpr;
       cvs.height = H * dpr;
       ctx.setTransform(dpr,0,0,dpr,0,0);
 
-      const rows = 9;
-      const pegR = 2;
+      const rows = 11;           // 12 bins → σ ≈ 1.658
+      const pegR = 2.2;
       const cols = rows + 1;
-      const startY = 22;
-      const gap = 13;
-      const binH = 24;
+      const startY = 20;
+      const gap = 14;
       const width = (cols - 1) * gap;
       const startX = (W - width) / 2;
+      const binTop = startY + rows * 10 + 8;
+      const binH = H - binTop - 6;
+      const labelY = H - 2;
 
       const balls = [];
       const bins = new Array(cols).fill(0);
+      const total = { value: 0 };
       let spawnTimer = 0;
-      const maxBalls = 500;
+      const maxBalls = 1200;
+      const mx = { x: -9999, y: -9999 };
+      let curX = W/2, curY = H/2;
+
+      const getMouse = (e) => {
+        const rect = cvs.getBoundingClientRect();
+        const scaleX = W / rect.width;
+        const scaleY = H / rect.height;
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      };
+
+      window.addEventListener('mousemove', (e) => {
+        const p = getMouse(e);
+        mx.x = p.x; mx.y = p.y;
+      });
 
       const spawn = () => {
         balls.push({
-          x: W/2 + (Math.random()-0.5)*3,
-          y: 6,
-          vy: 0.5 + Math.random()*0.3
+          x: W/2 + (Math.random()-0.5)*2,
+          y: 4,
+          vx: 0,
+          vy: 0.35 + Math.random()*0.25,
+          stuck: 0
         });
       };
 
       const reset = () => {
         balls.length = 0;
         bins.fill(0);
+        total.value = 0;
       };
+      resetBtn?.addEventListener('click', (e) => { e.stopPropagation(); reset(); });
+      cvs.addEventListener('click', reset);
 
       const update = () => {
         if (balls.length < maxBalls) {
           spawnTimer++;
-          if (spawnTimer % 5 === 0) spawn();
+          if (spawnTimer % 4 === 0) spawn();
         }
+
+        curX += (mx.x - curX) * 0.12;
+        curY += (mx.y - curY) * 0.12;
+
         for (let i = balls.length - 1; i >= 0; i--) {
           const b = balls[i];
-          b.vy += 0.015;
+          b.vy += 0.012;
           b.y += b.vy;
-          b.x += (Math.random() - 0.5) * 0.6;
+          b.stuck *= 0.85;
 
+          // Cursor wind / interactive follow
+          const dx = b.x - curX;
+          const dy = b.y - curY;
+          const d = Math.sqrt(dx*dx + dy*dy) || 1;
+          const influence = Math.max(0, 1 - d / 90);
+          const force = influence * 0.25;
+          b.vx += (dx / d) * force;
+          b.vy += (dy / d) * force * 0.3;
+          b.x += b.vx;
+          b.vx *= 0.88;
+
+          // Peg collision
           const rowIdx = Math.floor((b.y - startY) / 10);
           if (rowIdx >= 0 && rowIdx < rows) {
             const pegY = startY + rowIdx * 10;
@@ -1091,20 +1118,23 @@
             const pegXStart = (W - rowWidth) / 2;
             for (let c = 0; c <= rowIdx; c++) {
               const px = pegXStart + c * gap;
-              const dx = b.x - px;
-              const dy = b.y - pegY;
-              const d = Math.sqrt(dx*dx + dy*dy);
-              if (d < pegR + 1.6) {
-                b.x += (dx / (d || 1)) * 0.4;
-                b.y = pegY + pegR + 1.2;
+              const dx2 = b.x - px;
+              const dy2 = b.y - pegY;
+              const dist = Math.sqrt(dx2*dx2 + dy2*dy2);
+              if (dist < pegR + 1.5) {
+                const nx = dx2 / (dist || 1);
+                b.x += nx * 0.5;
+                b.y = pegY + pegR + 1.5;
+                b.stuck = 1;
               }
             }
           }
 
           if (b.y > startY + rows * 10) {
-            const idx = Math.round((b.x - ((W - width)/2)) / gap);
-            const bi = Math.max(0, Math.min(cols-1, idx));
-            bins[bi]++;
+            let idx = Math.round((b.x - startX) / gap);
+            idx = Math.max(0, Math.min(cols-1, idx));
+            bins[idx]++;
+            total.value++;
             balls.splice(i, 1);
           }
         }
@@ -1113,34 +1143,98 @@
       const draw = () => {
         ctx.clearRect(0,0,W,H);
 
+        // Compute running mean and std dev in bin units
+        let sumX = 0;
+        for (let i = 0; i < cols; i++) sumX += i * bins[i];
+        const n = total.value;
+        const mean = n ? sumX / n : rows/2;
+        let varX = 0;
+        for (let i = 0; i < cols; i++) varX += bins[i] * (i - mean) ** 2;
+        const sd = n > 1 ? Math.sqrt(varX / n) : 1;
+        const centerBin = mean;
+        const threeSigma = 3 * sd;
+
+        // Bins
         const maxBin = Math.max(...bins, 1);
         for (let i = 0; i < cols; i++) {
-          const h = (bins[i] / maxBin) * (binH - 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.9)';
-          ctx.fillRect(startX + i*gap - gap/2 + 1, H - h - 2, gap - 2, h);
-          ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-          ctx.strokeRect(startX + i*gap - gap/2 + 1, H - h - 2, gap - 2, h);
+          const h = maxBin > 0 ? (bins[i] / maxBin) * (binH - 8) : 0;
+          const x = startX + i * gap - gap/2 + 2;
+          // color fill
+          ctx.fillStyle = 'rgba(120,200,255,0.75)';
+          ctx.fillRect(x, H - h - 6 - binH + (6 + binH - h), gap - 4, h);
+          ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+          ctx.strokeRect(x, H - h - 6 - binH + (6 + binH - h), gap - 4, h);
+
+          // Six-sigma region highlight: bins within ±3σ of mean
+          if (Math.abs(i - centerBin) <= threeSigma + 0.5) {
+            ctx.fillStyle = 'rgba(120,220,160,0.12)';
+          } else {
+            ctx.fillStyle = 'rgba(255,120,140,0.12)';
+          }
+          ctx.fillRect(x, binTop, gap - 4, binH);
         }
 
+        // 6σ boundaries (±3σ lines)
+        const ucl = startX + (centerBin + threeSigma) * gap;
+        const lcl = startX + (centerBin - threeSigma) * gap;
+        ctx.strokeStyle = 'rgba(120,220,160,0.85)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(lcl, binTop); ctx.lineTo(lcl, H - 6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(ucl, binTop); ctx.lineTo(ucl, H - 6); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(120,220,160,0.95)';
+        ctx.font = '9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('-3σ', lcl, binTop - 4);
+        ctx.fillText('+3σ', ucl, binTop - 4);
+
+        // Normal curve overlay
+        if (n > 20) {
+          ctx.strokeStyle = 'rgba(255,220,120,0.9)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          const maxCurve = maxBin * 0.85;
+          for (let i = 0; i < cols; i++) {
+            const z = (i - centerBin) / (sd || 1);
+            const normal = (1/Math.sqrt(2*Math.PI)) * Math.exp(-0.5*z*z);
+            const x = startX + i * gap;
+            const y = H - 6 + 8 - (normal / maxCurve) * (binH - 16);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+
+        // Pegs (using fading rows toward top to emphasize "after many trials")
         for (let r = 0; r < rows; r++) {
           const pegY = startY + r * 10;
           const rowWidth = r * gap;
           const pegXStart = (W - rowWidth) / 2;
           for (let c = 0; c <= r; c++) {
             const px = pegXStart + c * gap;
-            ctx.fillStyle = 'rgba(255,255,255,0.65)';
+            const alpha = 0.35 + 0.35 * (r / rows);
+            ctx.fillStyle = `rgba(255,255,255,${alpha})`;
             ctx.beginPath();
             ctx.arc(px, pegY, pegR, 0, Math.PI*2);
             ctx.fill();
           }
         }
 
+        // Balls
         ctx.fillStyle = '#ffffff';
         for (const b of balls) {
           ctx.beginPath();
-          ctx.arc(b.x, b.y, 1.2, 0, Math.PI*2);
+          ctx.arc(b.x, b.y, 1.15, 0, Math.PI*2);
           ctx.fill();
         }
+
+        // Stats
+        const within = n ? (bins.reduce((acc, v, i) => Math.abs(i - centerBin) <= threeSigma + 0.5 ? acc + v : acc, 0) / n * 100) : 0;
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`μ=${mean.toFixed(2)} σ=${sd.toFixed(2)} n=${n}`, 3, 10);
+        ctx.fillText(`6σ=${within.toFixed(2)}%`, 3, 20);
       };
 
       const loop = () => {
@@ -1148,8 +1242,6 @@
         draw();
         requestAnimationFrame(loop);
       };
-
-      cvs.addEventListener('click', reset);
       loop();
     };
     initGalton();
