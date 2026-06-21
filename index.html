@@ -1065,6 +1065,32 @@
         mx.x = p.x; mx.y = p.y;
       });
 
+      const requestOrientationPermissionIfNeeded = () => {
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          DeviceOrientationEvent.requestPermission()
+            .then(p => { /* granted or denied */ })
+            .catch(() => {});
+        }
+      };
+
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma === null) return;
+        const margin = 20;
+        const nx = Math.max(margin, Math.min(W - margin, W/2 + (e.gamma / 45) * (W/2)));
+        const beta = (typeof e.beta === 'number' ? e.beta : (typeof e.alpha === 'number' ? e.alpha : 0));
+        const ny = Math.max(margin, Math.min(H - margin, H/2 + (beta - 45) / 45 * (H/2)));
+        mx.x = nx;
+        mx.y = ny;
+      });
+
+      // iOS needs a user gesture before deviceorientation delivers data.
+      // We attach one click handler that does both permission + reset.
+      const onCanvasClick = () => {
+        requestOrientationPermissionIfNeeded();
+        reset();
+      };
+      cvs.addEventListener('click', onCanvasClick);
+
       const spawn = () => {
         balls.push({
           x: W/2 + (Math.random()-0.5)*3,
@@ -1080,7 +1106,6 @@
         bins.fill(0);
         total.value = 0;
       };
-      cvs.addEventListener('click', reset);
 
       const update = () => {
         if (balls.length < maxBalls) {
