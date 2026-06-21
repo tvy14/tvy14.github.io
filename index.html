@@ -767,24 +767,29 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-inner">
-            <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;">
-                <div class="hero-title" style="margin-bottom:0;"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></div>
+            <div style="display:grid;grid-template-columns:auto auto;gap:28px;align-items:center;justify-content:center;">
+                <div style="text-align:left;">
+                    <p class="hero-eyebrow">Ph.D. Candidate · AI-RAN &amp; Federated Learning</p>
+                    <h1 class="hero-title" style="margin-bottom:0;"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></h1>
+                </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <button id="galton-reset" title="Reset Galton board" style="width:22px;height:22px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.08);color:#fff;border-radius:50%;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;">↻</button>
-                    <div style="position:relative;width:220px;height:160px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;">
-                        <canvas id="galton" width="220" height="160" style="display:block;width:100%;height:100%;cursor:pointer;"></canvas>
+                    <div style="position:relative;width:240px;height:180px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;">
+                        <canvas id="galton" width="240" height="180" style="display:block;width:100%;height:100%;cursor:pointer;"></canvas>
                     </div>
                 </div>
             </div>
-            <p class="hero-desc">
-                Building secure, intelligent wireless systems at the intersection of O-RAN,
-                federated learning, and differential privacy. National Yang Ming Chiao Tung University.
-            </p>
-            <div class="hero-links">
-                <a href="mailto:timovictorio@gmail.com">Email</a>
-                <a href="https://www.linkedin.com/in/timovy13" target="_blank">LinkedIn</a>
-                <a href="https://github.com/tvy14" target="_blank">GitHub</a>
-                <a href="#publications">Publications</a>
+            <div style="text-align:center;margin-top:20px;">
+                <p class="hero-desc">
+                    Building secure, intelligent wireless systems at the intersection of O-RAN,
+                    federated learning, and differential privacy. National Yang Ming Chiao Tung University.
+                </p>
+                <div class="hero-links">
+                    <a href="mailto:timovictorio@gmail.com">Email</a>
+                    <a href="https://www.linkedin.com/in/timovy13" target="_blank">LinkedIn</a>
+                    <a href="https://github.com/tvy14" target="_blank">GitHub</a>
+                    <a href="#publications">Publications</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1027,21 +1032,20 @@
 
       const ctx = cvs.getContext('2d');
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const W = 220, H = 160;
+      const W = 240, H = 180;
       cvs.width = W * dpr;
       cvs.height = H * dpr;
       ctx.setTransform(dpr,0,0,dpr,0,0);
 
-      const rows = 11;           // 12 bins → σ ≈ 1.658
-      const pegR = 2.2;
+      const rows = 11;
+      const pegR = 2.4;
       const cols = rows + 1;
-      const startY = 20;
+      const startY = 22;
       const gap = 14;
       const width = (cols - 1) * gap;
       const startX = (W - width) / 2;
-      const binTop = startY + rows * 10 + 8;
-      const binH = H - binTop - 6;
-      const labelY = H - 2;
+      const binTop = startY + rows * 10 + 10;
+      const binH = H - binTop - 8;
 
       const balls = [];
       const bins = new Array(cols).fill(0);
