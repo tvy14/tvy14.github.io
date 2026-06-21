@@ -130,7 +130,7 @@
 
         /* ── Hero ── */
         .hero {
-            background: var(--color-hero);
+            background: transparent;
             color: var(--color-text-hero);
             padding: 160px 0 120px;
             text-align: center;
@@ -142,7 +142,9 @@
             content: '';
             position: absolute;
             inset: 0;
-            background:
+            z-index: -1;
+            background-color: var(--color-hero);
+            background-image:
                 radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,107,107,0.12) 0%, transparent 70%),
                 radial-gradient(ellipse 60% 50% at 80% 20%, rgba(0,107,107,0.06) 0%, transparent 60%);
             pointer-events: none;
@@ -563,6 +565,28 @@
             border-radius: 4px;
         }
 
+        #galton-wrap {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 180px;
+            height: 130px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        #galton {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
         /* ── Responsive ── */
         @media (max-width: 640px) {
             .hero {
@@ -656,8 +680,8 @@
       if (!cvs) return;
       const ctx = cvs.getContext('2d');
       let W, H, dpr;
-      const mx = {x:-1e3,y:-1e3};
-      const cur = {x:-1e3,y:-1e3};
+      const mx = {x: innerWidth/2, y: innerHeight/2};
+      const cur = {x: innerWidth/2, y: innerHeight/2};
 
       const resize = () => {
         dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -764,6 +788,7 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div id="galton-wrap"><canvas id="galton" width="180" height="130"></canvas></div>
         <div class="hero-inner">
             <p class="hero-eyebrow">Ph.D. Candidate · AI-RAN &amp; Federated Learning</p>
             <h1 class="hero-title"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></h1>
@@ -1009,6 +1034,126 @@
             <img src="https://s01.flagcounter.com/count2/fRgp/bg_17FFE8/txt_000000/border_CCCCCC/columns_2/maxflags_14/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter">
         </a>
     </div>
+
+    <script>
+    const initGalton = () => {
+      const cvs = document.getElementById('galton');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const W = 180, H = 130;
+      cvs.width = W * dpr;
+      cvs.height = H * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+
+      const rows = 9;
+      const pegR = 2;
+      const cols = rows + 1;
+      const startY = 22;
+      const gap = 13;
+      const binH = 24;
+      const width = (cols - 1) * gap;
+      const startX = (W - width) / 2;
+
+      const balls = [];
+      const bins = new Array(cols).fill(0);
+      let spawnTimer = 0;
+      const maxBalls = 500;
+
+      const spawn = () => {
+        balls.push({
+          x: W/2 + (Math.random()-0.5)*3,
+          y: 6,
+          vy: 0.5 + Math.random()*0.3
+        });
+      };
+
+      const reset = () => {
+        balls.length = 0;
+        bins.fill(0);
+      };
+
+      const update = () => {
+        if (balls.length < maxBalls) {
+          spawnTimer++;
+          if (spawnTimer % 5 === 0) spawn();
+        }
+        for (let i = balls.length - 1; i >= 0; i--) {
+          const b = balls[i];
+          b.vy += 0.015;
+          b.y += b.vy;
+          b.x += (Math.random() - 0.5) * 0.6;
+
+          const rowIdx = Math.floor((b.y - startY) / 10);
+          if (rowIdx >= 0 && rowIdx < rows) {
+            const pegY = startY + rowIdx * 10;
+            const rowWidth = rowIdx * gap;
+            const pegXStart = (W - rowWidth) / 2;
+            for (let c = 0; c <= rowIdx; c++) {
+              const px = pegXStart + c * gap;
+              const dx = b.x - px;
+              const dy = b.y - pegY;
+              const d = Math.sqrt(dx*dx + dy*dy);
+              if (d < pegR + 1.6) {
+                b.x += (dx / (d || 1)) * 0.4;
+                b.y = pegY + pegR + 1.2;
+              }
+            }
+          }
+
+          if (b.y > startY + rows * 10) {
+            const idx = Math.round((b.x - ((W - width)/2)) / gap);
+            const bi = Math.max(0, Math.min(cols-1, idx));
+            bins[bi]++;
+            balls.splice(i, 1);
+          }
+        }
+      };
+
+      const draw = () => {
+        ctx.clearRect(0,0,W,H);
+
+        const maxBin = Math.max(...bins, 1);
+        for (let i = 0; i < cols; i++) {
+          const h = (bins[i] / maxBin) * (binH - 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          ctx.fillRect(startX + i*gap - gap/2 + 1, H - h - 2, gap - 2, h);
+          ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+          ctx.strokeRect(startX + i*gap - gap/2 + 1, H - h - 2, gap - 2, h);
+        }
+
+        for (let r = 0; r < rows; r++) {
+          const pegY = startY + r * 10;
+          const rowWidth = r * gap;
+          const pegXStart = (W - rowWidth) / 2;
+          for (let c = 0; c <= r; c++) {
+            const px = pegXStart + c * gap;
+            ctx.fillStyle = 'rgba(255,255,255,0.65)';
+            ctx.beginPath();
+            ctx.arc(px, pegY, pegR, 0, Math.PI*2);
+            ctx.fill();
+          }
+        }
+
+        ctx.fillStyle = '#ffffff';
+        for (const b of balls) {
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, 1.2, 0, Math.PI*2);
+          ctx.fill();
+        }
+      };
+
+      const loop = () => {
+        update();
+        draw();
+        requestAnimationFrame(loop);
+      };
+
+      cvs.addEventListener('click', reset);
+      loop();
+    };
+    initGalton();
+    </script>
 
 </body>
 </html>
