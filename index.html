@@ -646,6 +646,68 @@
         border-radius: 0;
         font-weight: 700;
     }
+    /* Featured live planner, visible on arrival without opening a tab. */
+    .hero { padding-top: 100px; padding-bottom: 64px; }
+    .hero-inner { max-width: 1200px; }
+    .hero-feature-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 32px;
+        align-items: center;
+    }
+    .geomap-feature {
+        min-width: 0;
+        text-align: left;
+        background: #101827;
+        border: 1px solid rgba(88,166,255,0.5);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 16px 56px rgba(0,0,0,0.3);
+    }
+    .geomap-feature-header { padding: 18px 20px 14px; }
+    .geomap-feature-label {
+        font: 12px 'Courier Prime', monospace;
+        color: #7ee7b1;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+    .geomap-feature h2 { margin: 8px 0; font-size: clamp(20px, 2.2vw, 28px); line-height: 1.25; color: #fff; }
+    .geomap-feature p { font: 14px/1.5 system-ui, sans-serif; color: #c9d5e6; }
+    .geomap-feature iframe { display: block; width: 100%; height: 300px; border: 0; background: #0d1117; }
+    .geomap-feature-actions { padding: 12px 20px 16px; }
+    .geomap-feature .geomap-launch {
+        display: block;
+        padding: 10px 12px;
+        background: #1f6feb;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 6px;
+        font: 700 16px/1.4 'Courier Prime', monospace;
+    }
+    .geomap-launch:hover { background: #1158c7; }
+    .geomap-feature .geomap-caption { margin-top: 8px; font-size: 12px; }
+    .galton-game { margin: 24px auto 0; max-width: 340px; }
+    .galton-game summary {
+        cursor: pointer;
+        padding: 10px 14px;
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 8px;
+        font: 16px 'Courier Prime', monospace;
+        color: #e8e8ed;
+    }
+    .galton-game canvas { display: block; width: 300px; max-width: 100%; height: auto; margin: 12px auto; background: #101827; border-radius: 12px; cursor: pointer; }
+    .galton-game p { font: 13px/1.5 system-ui, sans-serif; color: #c9d5e6; }
+    .geomap-launch:focus-visible, .galton-game summary:focus-visible { outline: 3px solid #7ee7b1; outline-offset: 3px; }
+    @media (max-width: 760px) {
+        .hero { padding-top: 76px; }
+        .hero-inner { padding: 0 16px; }
+        .hero-feature-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+        .geomap-feature { order: -1; }
+        .geomap-feature iframe { height: 240px; }
+        .hero h1 { font-size: clamp(30px, 7vw, 48px); }
+        .visitor-counter { position: static; margin: 16px auto; }
+    }
 </style>
 </head>
 <body>
@@ -767,16 +829,23 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-inner">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;max-width:760px;margin:0 auto;">
+            <div class="hero-feature-grid">
                 <div style="text-align:center;">
                     <p class="hero-eyebrow">Ph.D. Candidate · AI-RAN &amp; Federated Learning</p>
                     <h1 class="hero-title" style="margin-bottom:0;justify-content:center;"><img src="https://avatars.githubusercontent.com/u/121087211?v=4" alt="Timothius" class="hero-avatar"><span>Timothius<br>Victorio Yasin</span></h1>
                 </div>
-                <div style="display:flex;align-items:center;justify-content:center;">
-                    <div style="position:relative;width:300px;height:220px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18);border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;">
-                        <canvas id="galton" width="300" height="220" style="display:block;width:100%;height:100%;cursor:pointer;"></canvas>
+                <section class="geomap-feature" aria-labelledby="geomap-heading">
+                    <div class="geomap-feature-header">
+                        <span class="geomap-feature-label">Live demo · 5G NR planning</span>
+                        <h2 id="geomap-heading">Try our MiniRAN Geo Mapper!</h2>
+                        <p>Explore a live radio map. Open the planner to place base stations and compare coverage.</p>
                     </div>
-                </div>
+                    <iframe id="geomap-preview" src="https://tvy14.github.io/miniran-geomap/?embed=1" title="Live MiniRAN Geo Mapper — Hsinchu demo coverage map" loading="eager"></iframe>
+                    <div class="geomap-feature-actions">
+                        <a class="geomap-launch" href="https://tvy14.github.io/miniran-geomap/" target="_blank" rel="noopener noreferrer">Open full Geo Mapper ↗</a>
+                        <p class="geomap-caption">Pan &amp; zoom the preview · Synthetic demo topology, not measured network coverage.</p>
+                    </div>
+                </section>
             </div>
             <div style="text-align:center;margin-top:20px;">
                 <p class="hero-desc" style="text-align:center;">Fundamental is Key, Knowledge's a Singularity. Stay Hungry, but not Foolish.</p>
@@ -788,6 +857,11 @@
                     <a href="#publications">Publications</a>
                 </div>
             </div>
+            <details class="galton-game" id="galton-game">
+                <summary>Galton board game</summary>
+                <canvas id="galton" width="300" height="220" aria-label="Interactive Galton board probability simulation"></canvas>
+                <p>Move your pointer to influence the balls. Click the board to reset.</p>
+            </details>
         </div>
     </section>
 
@@ -1302,13 +1376,21 @@
       };
 
       const loop = () => {
+        if (!document.getElementById('galton-game').open) return;
         update();
         draw();
         requestAnimationFrame(loop);
       };
       loop();
+      return loop;
     };
-    initGalton();
+    const galtonGame = document.getElementById('galton-game');
+    let resumeGalton;
+    galtonGame.addEventListener('toggle', () => {
+      if (!galtonGame.open) return;
+      if (resumeGalton) resumeGalton();
+      else resumeGalton = initGalton();
+    });
     </script>
 
 </body>
